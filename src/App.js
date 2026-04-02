@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import ResumeUpload from './components/ResumeUpload';
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -18,6 +19,7 @@ function App() {
         <Route path="/login"     element={<Login />} />
         <Route path="/signup"    element={<Signup />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/resume"    element={<PrivateRoute><ResumeUpload /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   );
