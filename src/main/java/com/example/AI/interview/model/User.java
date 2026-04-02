@@ -11,6 +11,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
     private String role;
     private String language;
 
@@ -31,6 +36,9 @@ public class User {
         this.name = name;
     }
 
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
     public String getRole() {
         return role;
     }
