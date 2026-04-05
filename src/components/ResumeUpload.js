@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ResumeUpload.css';
 
 function ResumeUpload() {
+  const navigate = useNavigate();
+  const token    = localStorage.getItem('token');
+
   const [candidateName, setCandidateName] = useState('');
-  const [email, setEmail] = useState('');
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState('');
+  const [email,         setEmail]         = useState('');
+  const [file,          setFile]          = useState(null);
+  const [loading,       setLoading]       = useState(false);
+  const [error,         setError]         = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setResult(null);
 
     if (!candidateName || !email || !file) {
       setError('Please fill all fields and select a PDF file.');
@@ -28,17 +30,23 @@ function ResumeUpload() {
       setLoading(true);
       const response = await fetch('http://localhost:8080/api/resumes/upload', {
         method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
         body: formData,
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Something went wrong.');
+        setError(data.error || 'Upload failed.');
         return;
       }
 
-      setResult(data);
+      // Save resumeId for later use (question generation)
+      localStorage.setItem('resumeId', data.id);
+
+      // Go straight to profile page to show extracted data
+      navigate('/profile');
+
     } catch (err) {
       setError('Could not connect to server. Make sure Spring Boot is running.');
     } finally {
@@ -94,52 +102,11 @@ function ResumeUpload() {
           {error && <div className="error">{error}</div>}
 
           <button type="submit" disabled={loading}>
-            {loading ? 'Uploading...' : 'Upload Resume'}
+            {loading ? 'Uploading & Analyzing…' : 'Upload Resume'}
           </button>
 
         </form>
       </div>
-
-      {result && (
-        <div className="card result-card">
-          <h2>Upload Successful!</h2>
-          <div className="result-grid">
-            <div className="result-item">
-              <span className="label">Name</span>
-              <span className="value">{result.candidateName}</span>
-            </div>
-            <div className="result-item">
-              <span className="label">Email</span>
-              <span className="value">{result.email}</span>
-            </div>
-            <div className="result-item">
-              <span className="label">File</span>
-              <span className="value">{result.originalFileName}</span>
-            </div>
-            <div className="result-item">
-              <span className="label">Job Title</span>
-              <span className="value">{result.jobTitle || 'Not detected'}</span>
-            </div>
-            <div className="result-item">
-              <span className="label">Experience</span>
-              <span className="value">{result.experienceYears || 'Not detected'}</span>
-            </div>
-            <div className="result-item">
-              <span className="label">Status</span>
-              <span className={`badge ${result.status === 'PARSED' ? 'green' : 'red'}`}>
-                {result.status}
-              </span>
-            </div>
-          </div>
-
-          {result.skills && (
-            <div className="skills-box">
-              <span className="label">Skills Detected</span>
-              <p>{result.skills}</p>
-            </div>
-          )}
-        </div>
-      )}
 
     </div>
   );

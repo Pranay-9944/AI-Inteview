@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
 import ResumeUpload from './components/ResumeUpload';
 
 function PrivateRoute({ children }) {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/signup"    element={<Signup />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/resume"    element={<PrivateRoute><ResumeUpload /></PrivateRoute>} />
+        <Route path="/profile"   element={<PrivateRoute><Profile /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   );
