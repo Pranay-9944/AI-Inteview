@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
+import Navbar from '../components/Navbar';
 
 function Profile() {
   const navigate  = useNavigate();
@@ -41,7 +42,7 @@ function Profile() {
   return (
     <div className="prof-page">
 
-      {/* Top bar */}
+      <Navbar />
       <div className="prof-topbar">
         <button className="back-btn" onClick={() => navigate('/dashboard')}>← Dashboard</button>
         <button className="prof-btn outline" onClick={() => navigate('/resume')}>Re-upload Resume</button>

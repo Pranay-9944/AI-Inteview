@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
+import Navbar from '../components/Navbar';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -91,14 +92,7 @@ function Dashboard() {
   return (
     <div className="dashboard">
 
-      {/* Navbar */}
-      <nav className="dash-nav">
-        <h1 className="logo">AI Interview</h1>
-        <div className="nav-right">
-          <span className="user-email">{email}</span>
-          <button onClick={handleLogout} className="logout-btn">Logout</button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Welcome */}
       <div className="welcome">
