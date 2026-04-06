@@ -109,3 +109,26 @@ def health():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
+
+
+# ── 4. Parse resume into structured fields ──────────────────────────────────
+@app.route("/parse-resume", methods=["POST"])
+def parse_resume():
+    data        = request.json or {}
+    resume_text = data.get("resumeText", "")
+
+    system = (
+        "You are a resume parser. Extract fields from the resume and return ONLY valid JSON. "
+        "No markdown, no code fences, no explanation. "
+        'Schema: {"jobTitle": "string", "experienceYears": "string", "skills": ["skill1","skill2",...]}'
+    )
+    user_msg = f"Resume:\n{resume_text[:3000]}"
+
+    try:
+        raw = call_groq(system, user_msg)
+        import json, re
+        raw = re.sub(r"```[a-z]*", "", raw).strip().strip("`").strip()
+        result = json.loads(raw)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
