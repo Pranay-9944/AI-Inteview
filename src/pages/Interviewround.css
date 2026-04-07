@@ -1,0 +1,297 @@
+* { box-sizing: border-box; }
+
+.ir-page {
+  min-height: 100vh;
+  background: #f8f9fc;
+  font-family: system-ui, sans-serif;
+}
+
+/* Center layout for intro/loading/done */
+.ir-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  padding: 24px 16px;
+}
+
+/* ── Intro Card ─────────────────────────────────────────────── */
+.ir-intro-card {
+  background: white;
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+}
+
+.ir-intro-icon {
+  width: 80px; height: 80px;
+  border-radius: 20px;
+  font-size: 36px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.ir-intro-card h1 {
+  font-size: 28px; font-weight: 800; margin: 0 0 8px;
+}
+
+.ir-intro-desc {
+  color: #666; font-size: 15px; margin: 0 0 28px;
+}
+
+.ir-rules {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 32px;
+}
+
+.ir-rule {
+  background: #f8f9fc;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+}
+
+.ir-error {
+  color: #dc2626; font-size: 14px;
+  background: #fef2f2; padding: 10px;
+  border-radius: 8px; margin-bottom: 16px;
+}
+
+/* ── Loading Card ───────────────────────────────────────────── */
+.ir-loading-card {
+  text-align: center;
+  padding: 48px 32px;
+}
+
+.ir-spinner {
+  width: 52px; height: 52px;
+  border: 5px solid #e0e0e0;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 24px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ir-loading-card h2 { font-size: 20px; margin: 0 0 8px; color: #1a1a2e; }
+.ir-loading-card p  { color: #888; font-size: 14px; }
+
+/* ── Progress bar ───────────────────────────────────────────── */
+.ir-progress-bar {
+  height: 4px;
+  background: #e0e0e0;
+  width: 100%;
+}
+.ir-progress-fill {
+  height: 100%;
+  transition: width 0.4s ease;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ── Interview layout ───────────────────────────────────────── */
+.ir-interview-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+.ir-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.ir-round-badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ir-counter {
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+}
+
+/* Question card */
+.ir-question-card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.ir-q-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+
+.ir-q-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Answer area */
+.ir-answer-area {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.ir-textarea {
+  width: 100%;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 15px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 16px;
+}
+.ir-textarea:focus { border-color: #4f46e5; }
+
+/* Feedback area */
+.ir-feedback-area {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ir-feedback-card {
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.ir-feedback-card.good { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.ir-feedback-card.avg  { background: #fffbeb; border: 1px solid #fde68a; }
+.ir-feedback-card.poor { background: #fef2f2; border: 1px solid #fecaca; }
+
+.ir-feedback-score { text-align: center; flex-shrink: 0; }
+.ir-big-score { font-size: 48px; font-weight: 800; line-height: 1; }
+.ir-out-of    { font-size: 18px; color: #888; }
+.ir-feedback-card.good .ir-big-score { color: #16a34a; }
+.ir-feedback-card.avg  .ir-big-score { color: #d97706; }
+.ir-feedback-card.poor .ir-big-score { color: #dc2626; }
+
+.ir-feedback-text { font-size: 15px; color: #444; margin: 0; line-height: 1.6; }
+
+.ir-your-answer {
+  background: #f8f9fc;
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+.ir-your-label { font-size: 12px; font-weight: 700; color: #888;
+  text-transform: uppercase; margin: 0 0 8px; }
+.ir-your-text  { font-size: 14px; color: #444; margin: 0; line-height: 1.6; }
+
+/* ── Buttons ────────────────────────────────────────────────── */
+.ir-start-btn {
+  width: 100%; padding: 14px;
+  color: white; border: none;
+  border-radius: 12px; font-size: 16px;
+  font-weight: 700; cursor: pointer;
+  margin-bottom: 12px;
+  transition: opacity 0.2s;
+}
+.ir-start-btn:hover { opacity: 0.9; }
+.ir-start-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ir-back-btn {
+  width: 100%; padding: 12px;
+  background: none; border: 1.5px solid #e0e0e0;
+  border-radius: 12px; font-size: 15px;
+  font-weight: 600; cursor: pointer; color: #555;
+}
+.ir-back-btn:hover { background: #f5f5f5; }
+
+.ir-submit-btn {
+  width: 100%; padding: 14px;
+  color: white; border: none;
+  border-radius: 12px; font-size: 16px;
+  font-weight: 700; cursor: pointer;
+  transition: opacity 0.2s;
+}
+.ir-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ir-next-btn {
+  padding: 14px 32px;
+  color: white; border: none;
+  border-radius: 12px; font-size: 16px;
+  font-weight: 700; cursor: pointer;
+  align-self: flex-end;
+  transition: opacity 0.2s;
+}
+.ir-next-btn:hover { opacity: 0.9; }
+
+/* ── Done screen ────────────────────────────────────────────── */
+.ir-done-card {
+  background: white;
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+}
+
+.ir-done-icon { font-size: 56px; margin-bottom: 16px; }
+.ir-done-card h1 { font-size: 28px; font-weight: 800; margin: 0 0 4px; color: #1a1a2e; }
+.ir-done-sub  { color: #888; margin: 0 0 28px; }
+
+.ir-score-circle {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  border: 5px solid;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+}
+.ir-score-num   { font-size: 40px; font-weight: 800; line-height: 1; }
+.ir-score-total { font-size: 16px; color: #888; }
+.ir-score-label { font-size: 16px; color: #444; margin-bottom: 28px; }
+
+.ir-summary {
+  text-align: left;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ir-summary-item {
+  background: #f8f9fc;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.ir-summary-q {
+  font-size: 13px; color: #555;
+  margin: 0 0 6px; font-weight: 500;
+}
+.ir-summary-score {
+  font-size: 13px; font-weight: 600;
+  padding: 4px 10px; border-radius: 6px;
+  display: inline-block;
+}
+.ir-summary-score.good { background: #dcfce7; color: #166534; }
+.ir-summary-score.avg  { background: #fef9c3; color: #854d0e; }
+.ir-summary-score.poor { background: #fee2e2; color: #991b1b; }
+
+.ir-done-actions { display: flex; flex-direction: column; gap: 12px; }

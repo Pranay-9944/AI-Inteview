@@ -29,7 +29,11 @@ function Dashboard() {
   ];
 
   // Load questions for a round via the backend → AI service
-  const startRound = async (roundType) => {
+  const startRound = (roundType) => {
+    navigate(`/interview/${roundType.toLowerCase()}`);
+  };
+
+  const startRound_unused = async (roundType) => {
     setError('');
     setGenerating(roundType);
     setQuestions([]);
