@@ -1,43 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Interview Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161d;
+      --surface2: #1a1e27;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.15);
+      --text: #e8eaf0;
+      --text-muted: #6b7280;
+      --text-dim: #3d4250;
+      --green: #22c55e;
+      --green-dim: rgba(34,197,94,0.12);
+      --purple: #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --blue: #38bdf8;
+      --blue-dim: rgba(56,189,248,0.12);
+      --red: #f87171;
+      --amber: #fbbf24;
+    }
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-dim);
+      border: 1px solid rgba(34,197,94,0.2);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .rounds-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 520px) {
+      .rounds-grid { grid-template-columns: 1fr; }
+    }
+
+    .round-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .round-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+      border-radius: 16px;
+    }
+
+    .round-card.hr-card::before { background: radial-gradient(ellipse at top, rgba(34,197,94,0.06) 0%, transparent 70%); }
+    .round-card.ai-card::before { background: radial-gradient(ellipse at top, rgba(167,139,250,0.06) 0%, transparent 70%); }
+    .round-card.dsa-card::before { background: radial-gradient(ellipse at top, rgba(56,189,248,0.06) 0%, transparent 70%); }
+
+    .round-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .round-card:hover::before { opacity: 1; }
+    .round-card:active { transform: scale(0.98) translateY(0); }
+
+    .round-card.disabled { opacity: 0.3; pointer-events: none; }
+
+    .round-card.active.hr-card { border-color: var(--green); background: var(--green-dim); }
+    .round-card.active.ai-card { border-color: var(--purple); background: var(--purple-dim); }
+    .round-card.active.dsa-card { border-color: var(--blue); background: var(--blue-dim); }
+    .round-card.active::before { opacity: 1; }
+
+    .round-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 0.875rem;
+    }
+
+    .hr-card .round-icon { background: var(--green-dim); }
+    .ai-card .round-icon { background: var(--purple-dim); }
+    .dsa-card .round-icon { background: var(--blue-dim); }
+
+    .round-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .round-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 300;
+      line-height: 1.4;
+    }
+
+    .status-panel {
+      width: 100%;
+      max-width: 680px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-panel.visible { display: flex; }
+
+    .pulse-ring {
+      position: relative;
+      width: 10px;
+      height: 10px;
+      flex-shrink: 0;
+    }
+
+    .pulse-ring::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid var(--green);
+      opacity: 0.3;
+      animation: ripple 1.5s infinite;
+    }
+
+    @keyframes ripple { 0%{transform:scale(0.8);opacity:0.5} 100%{transform:scale(1.6);opacity:0} }
+
+    .pulse-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .pulse-dot.error { background: var(--red); }
+    .pulse-dot.error + .pulse-ring::before { border-color: var(--red); animation: none; }
+
+    .status-info { flex: 1; }
+    .status-title { font-size: 14px; font-weight: 500; color: var(--text); }
+    .status-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+    .end-btn {
+      background: transparent;
+      border: 1px solid rgba(248,113,113,0.3);
+      color: var(--red);
+      font-family: 'Sora', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      display: none;
+    }
+
+    .end-btn:hover { background: rgba(248,113,113,0.08); border-color: var(--red); }
+    .end-btn.show { display: block; }
+
+    .result-panel {
+      width: 100%;
+      max-width: 680px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .result-panel.visible { display: flex; align-items: center; gap: 12px; }
+
+    .result-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(34,197,94,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .result-text { font-size: 14px; color: var(--text); }
+    .result-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+    .session-id {
+      margin-top: 1rem;
+      text-align: right;
+      font-size: 11px;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-badge">
+      <span class="badge-dot"></span>
+      AI Interview Portal
+    </div>
+    <h1>Choose Your Round</h1>
+    <p class="subtitle">Tap a round below to begin your session</p>
+  </div>
+
+  <div class="rounds-grid">
+    <div class="round-card ai-card" id="card-AI" onclick="startRound('AI')">
+      <div class="round-icon">🤖</div>
+      <div class="round-title">AI Round</div>
+      <div class="round-sub">Technical & reasoning questions</div>
+    </div>
+    <div class="round-card hr-card" id="card-HR" onclick="startRound('HR')">
+      <div class="round-icon">🧑‍💼</div>
+      <div class="round-title">HR Round</div>
+      <div class="round-sub">Behavioral & culture fit</div>
+    </div>
+    <div class="round-card dsa-card" id="card-DSA" onclick="startRound('DSA')">
+      <div class="round-icon">💡</div>
+      <div class="round-title">DSA Round</div>
+      <div class="round-sub">Data structures & algorithms</div>
+    </div>
+  </div>
+
+  <div class="status-panel" id="status-panel">
+    <div class="pulse-ring">
+      <div class="pulse-dot" id="pulse-dot"></div>
+    </div>
+    <div class="status-info">
+      <div class="status-title" id="status-title">Starting session...</div>
+      <div class="status-meta" id="status-meta"></div>
+    </div>
+    <button class="end-btn" id="end-btn" onclick="endRound()">End Round</button>
+  </div>
+
+  <div class="result-panel" id="result-panel">
+    <div class="result-icon">✓</div>
+    <div>
+      <div class="result-text" id="result-text">Round completed</div>
+      <div class="result-sub" id="result-sub"></div>
+    </div>
+  </div>
+
+  <div class="session-id" id="session-id"></div>
+
+  <script>
+    const BASE_URL = 'http://localhost:8080'; // Change this to your server URL
+    const USER_ID = 1; // Change this to your logged-in user's ID
+
+    let activeRound = null;
+    let currentSessionId = null;
+    let timerInterval = null;
+    let startTime = null;
+
+    function formatDuration(ms) {
+      const s = Math.floor(ms / 1000);
+      const m = Math.floor(s / 60);
+      return m > 0 ? m + 'm ' + (s % 60) + 's' : s + 's';
+    }
+
+    async function startRound(type) {
+      if (activeRound) return;
+      activeRound = type;
+
+      // Highlight selected card, dim others
+      ['AI', 'HR', 'DSA'].forEach(t => {
+        const card = document.getElementById('card-' + t);
+        if (t === type) {
+          card.classList.add('active');
+        } else {
+          card.classList.add('disabled');
+        }
+      });
+
+      // Show status panel
+      const panel = document.getElementById('status-panel');
+      panel.classList.add('visible');
+      document.getElementById('status-title').textContent = 'Starting ' + type + ' round...';
+      document.getElementById('status-meta').textContent = '';
+      document.getElementById('result-panel').classList.remove('visible');
+
+      try {
+        const res = await fetch(BASE_URL + '/session/start?userId=' + USER_ID + '&type=' + type, {
+          method: 'POST'
+        });
+
+        if (!res.ok) throw new Error('Server error: ' + res.status);
+
+        const session = await res.json();
+        currentSessionId = session.id;
+        startTime = Date.now();
+
+        document.getElementById('status-title').textContent = type + ' Round in progress';
+        document.getElementById('end-btn').classList.add('show');
+        document.getElementById('session-id').style.display = 'block';
+        document.getElementById('session-id').textContent = 'session_id: ' + currentSessionId;
+
+        timerInterval = setInterval(() => {
+          document.getElementById('status-meta').textContent =
+            'duration: ' + formatDuration(Date.now() - startTime);
+        }, 1000);
+
+      } catch (err) {
+        document.getElementById('status-title').textContent = 'Failed to connect to server';
+        document.getElementById('status-meta').textContent = err.message;
+        document.getElementById('pulse-dot').classList.add('error');
+        resetCards();
+        activeRound = null;
+      }
+    }
+
+    async function endRound() {
+      if (!currentSessionId) return;
+      clearInterval(timerInterval);
+
+      const duration = formatDuration(Date.now() - startTime);
+      document.getElementById('end-btn').classList.remove('show');
+      document.getElementById('status-title').textContent = 'Ending session...';
+
+      try {
+        const res = await fetch(BASE_URL + '/session/end?sessionId=' + currentSessionId, {
+          method: 'POST'
+        });
+
+        if (!res.ok) throw new Error('Server error: ' + res.status);
+
+        document.getElementById('status-panel').classList.remove('visible');
+
+        const resultPanel = document.getElementById('result-panel');
+        resultPanel.classList.add('visible');
+        document.getElementById('result-text').textContent = activeRound + ' Round completed';
+        document.getElementById('result-sub').textContent =
+          'duration: ' + duration + '  |  session_id: ' + currentSessionId;
+
+      } catch (err) {
+        document.getElementById('status-title').textContent = 'Error ending session: ' + err.message;
+      }
+
+      resetCards();
+      activeRound = null;
+      currentSessionId = null;
+    }
+
+    function resetCards() {
+      ['AI', 'HR', 'DSA'].forEach(t => {
+        const card = document.getElementById('card-' + t);
+        card.classList.remove('active', 'disabled');
+      });
+    }
+  </script>
+</body>
 </html>
