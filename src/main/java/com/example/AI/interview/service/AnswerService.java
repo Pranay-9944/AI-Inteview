@@ -25,15 +25,11 @@ public class AnswerService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // Send question + answer + type so Groq has full context
-        String requestJson = String.format(
-                "{\"answer\":\"%s\",\"question\":\"%s\",\"type\":\"%s\"}",
-                escape(answer.getAnswer()),
-                escape(answer.getType()),   // re-using type field for question text is optional;
-                answer.getType() != null ? answer.getType() : "AI"
-        );
+        Map<String, String> requestBody = Map.of("answer", answer.getAnswer());
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
 
-        HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
+        // ❌ REMOVED: HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
+        // That was a duplicate declaration referencing a non-existent `requestJson` variable
 
         try {
             ResponseEntity<Map> response =
@@ -54,9 +50,5 @@ public class AnswerService {
         return repo.save(answer);
     }
 
-    private String escape(String s) {
-        if (s == null) return "";
-        return s.replace("\\", "\\\\").replace("\"", "\\\"")
-                .replace("\n", "\\n").replace("\r", "");
-    }
+    // `escape()` is now unused — safe to delete since Map serialization handles escaping
 }
