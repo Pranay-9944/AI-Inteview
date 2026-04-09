@@ -159,12 +159,11 @@ public class ResumeService {
     }
 
     private String extractTextFromPdf(MultipartFile file) throws IOException {
-        try (InputStream in = file.getInputStream()) {
-            PDDocument doc = Loader.loadPDF(in.readAllBytes());
-            String text = new PDFTextStripper().getText(doc);
-            doc.close();
-            return text;
-        }
+    try (InputStream in = file.getInputStream();
+         PDDocument doc = Loader.loadPDF(in.readAllBytes())) {
+        return new PDFTextStripper().getText(doc);
+    }
+}
     }
 
     private String parseSkills(String text) {
