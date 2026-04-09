@@ -51,7 +51,6 @@ public class ResumeService {
         resume.setFilePath(savedPath);
         resume.setExtractedText(text);
 
-        // Try AI parsing via Flask, fall back to regex
         try {
             parseWithAI(resume, text);
             resume.setStatus(Resume.ResumeStatus.PARSED);
@@ -68,8 +67,6 @@ public class ResumeService {
 
         return ResumeResponse.from(resumeRepository.save(resume));
     }
-
-    // ── AI parsing via Flask/Groq ────────────────────────────────────────────
 
     private void parseWithAI(Resume resume, String text) {
         RestTemplate rt = new RestTemplate();
@@ -96,15 +93,11 @@ public class ResumeService {
             resume.setExperienceYears(result.get("experienceYears").toString());
     }
 
-    // ── Regex fallback ───────────────────────────────────────────────────────
-
     private void parseWithRegex(Resume resume, String text) {
         resume.setSkills(parseSkills(text));
         resume.setExperienceYears(parseExperienceYears(text));
         resume.setJobTitle(parseJobTitle(text));
     }
-
-    // ── Other service methods ────────────────────────────────────────────────
 
     public ResumeResponse getById(Long id) {
         return ResumeResponse.from(resumeRepository.findById(id)
@@ -130,8 +123,6 @@ public class ResumeService {
         try { Files.deleteIfExists(Paths.get(r.getFilePath())); } catch (IOException ignored) {}
         resumeRepository.delete(r);
     }
-
-    // ── Helpers ──────────────────────────────────────────────────────────────
 
     private void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty())
@@ -159,16 +150,14 @@ public class ResumeService {
     }
 
     private String extractTextFromPdf(MultipartFile file) throws IOException {
-    try (InputStream in = file.getInputStream();
-         PDDocument doc = Loader.loadPDF(in.readAllBytes())) {
-        return new PDFTextStripper().getText(doc);
-    }
-}
+        try (InputStream in = file.getInputStream();
+             PDDocument doc = Loader.loadPDF(in.readAllBytes())) {
+            return new PDFTextStripper().getText(doc);
+        }
     }
 
     private String parseSkills(String text) {
         String lower = text.toLowerCase();
-        // Try to find skills section
         String[] markers = {"skills", "technical skills", "technologies", "competencies"};
         for (String marker : markers) {
             int idx = lower.indexOf(marker);
